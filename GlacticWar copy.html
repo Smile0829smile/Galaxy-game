@@ -1,0 +1,3708 @@
+
+<html>
+<head>
+
+	<style>
+		canvas{
+			background: #dddddd;
+		}
+	</style>
+
+	<script>
+		function getRandomInt(min, max){
+    		//Generate and store our random INTEGER between the minimum
+    		//and maximum values (inclusive)
+    		var randInt=Math.floor(Math.random()*(max-min+1))+min;
+
+    		return randInt;
+		}
+
+  
+		//globel variabel
+		//speed is only speed of spaceship
+		var speedX = 4;
+		var speedY = 4;
+		var speedXM = 4;
+		var speedYM = 4;
+
+
+		//planet
+        class firstPlanetClass{
+
+            constructor(pltX,pltY,
+                        pltWidth, pltHeight,
+                        pltImg){
+                this.x = pltX;
+                this.y = pltY;
+                this.width = pltWidth;
+                this.height = pltHeight;
+                this.img = new Image();
+                this.img.src = "firstPlanet.png"
+            }
+
+            // If this pebble is visible, then draw it on the screen.
+            draw(){
+                c.drawImage(this.img,
+                            this.x,
+                            this.y,
+                            this.width,
+                            this.height)
+            }
+        }
+
+		class secondPlanetClass{
+
+			constructor(pltX,pltY,
+						pltWidth, pltHeight,
+						pltImg){
+				this.x = pltX;
+				this.y = pltY;
+				this.width = pltWidth;
+				this.height = pltHeight;
+				this.img = new Image();
+				this.img.src = "secondPlanet.png"
+			}
+
+			// If this pebble is visible, then draw it on the screen.
+			draw(){
+				c.drawImage(this.img,
+							this.x,
+							this.y,
+							this.width,
+							this.height)
+			}
+		}
+
+
+		class thirdPlanetClass{
+
+			constructor(pltX,pltY,
+						pltWidth, pltHeight,
+						pltImg){
+				this.x = pltX;
+				this.y = pltY;
+				this.width = pltWidth;
+				this.height = pltHeight;
+				this.img = new Image();
+				this.img.src = "thirdPlanet.png"
+			}
+
+			// If this pebble is visible, then draw it on the screen.
+			draw(){
+				c.drawImage(this.img,
+							this.x,
+							this.y,
+							this.width,
+							this.height)
+			}
+		}
+
+		// class bossPlanet{
+
+		// 	constructor(pltX,pltY,
+		// 				pltWidth, pltHeight,
+		// 				pltImg){
+		// 		this.x = pltX;
+		// 		this.y = pltY;
+		// 		this.width = pltWidth;
+		// 		this.height = pltHeight;
+		// 		this.img = new Image();
+		// 		this.img.src = "planetBoss.png"
+		// 	}
+
+		// 	// If this pebble is visible, then draw it on the screen.
+		// 	draw(){
+		// 		c.drawImage(this.img,
+		// 					this.x,
+		// 					this.y,
+		// 					this.width,
+		// 					this.height)
+		// 	}
+		// }
+
+		//space ship
+		class spaceShipClass{
+
+			constructor(spaceX, spaceY,
+						spaceWidth, spaceHeight,
+						spaceImg){
+				this.x = spaceX;
+				this.y = spaceY;
+				this.width = spaceWidth;
+				this.height = spaceHeight;
+				this.img = new Image();
+				this.img.src = "spaceship1Up.png"
+			}
+
+			moveUp(){
+				this.y = this.y - speedYM;
+				this.img.src = "spaceship1Up.png"
+			}
+
+			moveDown(){
+				this.y = this.y + speedY;
+				this.img.src = "spaceship1Down.png"
+			}
+
+			moveRight(){
+				this.x = this.x + speedX;
+				this.img.src = "spaceship1Right.png"
+			}
+
+			moveLeft(){
+				this.x = this.x - speedXM;
+				this.img.src = "spaceship1Left.png"
+			}
+
+			moveRightDown(){
+				this.img.src = "spaceship1RightDown.png"
+			}
+			
+			moveLeftDown(){
+				this.img.src = "spaceship1LeftDown.png"
+			}
+
+			moveRightUp(){
+				this.img.src = "spaceship1RightUp.png"
+			}
+
+			moveLeftUp(){
+				this.img.src = "spaceship1LeftUp.png"
+			}
+
+			// If this pebble is visible, then draw it on the screen.
+			draw(){
+				c.drawImage(this.img,
+							this.x,
+							this.y,
+							this.width,
+							this.height)
+			}
+
+			//intersecting other things
+			intersects(obj){
+				if (this.x < obj.x + obj.width &&
+					this.x + this.width > obj.x &&
+					this.y < obj.y + obj.height &&
+					this.y + this.height > obj.y)
+				{
+					return true;
+				}
+				else{
+					return false;
+				}
+			}
+		}
+
+		var alienMove = 0.5;
+
+		class alienShipClass{
+			constructor(alienX, alienY,
+						alienWidth, alienHeight,
+						alienImg){
+				this.x = alienX;
+				this.y = alienY;
+				this.width = alienWidth;
+				this.height = alienHeight;
+				this.img = new Image();
+				this.img.src = "alien1.png"
+			}
+
+			moveToShip(){
+				if(this.x < spaceship.x){
+					this.x = this.x+alienMove
+				}
+				if(this.x > spaceship.x){
+					this.x = this.x-alienMove
+				}
+				if(this.y < spaceship.y){
+					this.y = this.y+alienMove
+				}
+				if(this.y > spaceship.y){
+					this.y = this.y-alienMove
+				}
+			}
+
+			// If this pebble is visible, then draw it on the screen.
+			draw(){
+				c.drawImage(this.img,
+							this.x,
+							this.y,
+							this.width,
+							this.height)
+			}
+
+		}
+
+		var alienMove1 = 0.8;
+
+		class alienTrClass{
+			constructor(alienX, alienY,
+						alienWidth, alienHeight,
+						alienImg){
+				this.x = alienX;
+				this.y = alienY;
+				this.width = alienWidth;
+				this.height = alienHeight;
+				this.img = new Image();
+				this.img.src = "alien2.png"
+			}
+
+			moveToShip(){
+				if(this.x < spaceship.x){
+					this.x = this.x+alienMove1
+				}
+				if(this.x > spaceship.x){
+					this.x = this.x-alienMove1
+				}
+				if(this.y < spaceship.y){
+					this.y = this.y+alienMove1
+				}
+				if(this.y > spaceship.y){
+					this.y = this.y-alienMove1
+				}
+			}
+
+			// If this pebble is visible, then draw it on the screen.
+			draw(){
+				c.drawImage(this.img,
+							this.x,
+							this.y,
+							this.width,
+							this.height)
+			}
+
+		}
+
+		var alienMove2 = 0.9;
+
+		class alienHClass{
+			constructor(alienX, alienY,
+						alienWidth, alienHeight,
+						alienImg){
+				this.x = alienX;
+				this.y = alienY;
+				this.width = alienWidth;
+				this.height = alienHeight;
+				this.img = new Image();
+				this.img.src = "alien1.png"
+			}
+
+			moveToShip(){
+				if(this.x < spaceship.x){
+					this.x = this.x+alienMove1
+				}
+				if(this.x > spaceship.x){
+					this.x = this.x-alienMove1
+				}
+				if(this.y < spaceship.y){
+					this.y = this.y+alienMove1
+				}
+				if(this.y > spaceship.y){
+					this.y = this.y-alienMove1
+				}
+			}
+
+			// If this pebble is visible, then draw it on the screen.
+			draw(){
+				c.drawImage(this.img,
+							this.x,
+							this.y,
+							this.width,
+							this.height)
+			}
+
+		}
+
+
+
+		////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////
+		//ABILITY
+
+		var bFirstAb = "novis"
+		class firstAb{
+			constructor(abX, abY,
+						abWidth, abHeight,
+						abImg){
+				this.x = abX;
+				this.y = abY;
+				this.width = abWidth;
+				this.height = abHeight;
+				this.img = new Image();
+				this.img.src = "firstAb.png"
+			}
+
+			follow(){
+				this.x = spaceship.x-130;
+				this.y = spaceship.y-130;
+			}
+
+			// If this pebble is visible, then draw it on the screen.
+			draw(){
+				c.drawImage(this.img,
+							this.x,
+							this.y,
+							this.width,
+							this.height)
+			}
+
+			//intersecting other things
+			intersects(obj){
+				if (this.x < obj.x + obj.width &&
+					this.x + this.width > obj.x &&
+					this.y < obj.y + obj.height &&
+					this.y + this.height > obj.y)
+				{
+					return true;
+				}
+				else{
+					return false;
+				}
+			}
+		}
+
+		var bSecondAb = "novis";
+		var speedHU = 7;
+		var speedHR = 7;
+		class secondAb{
+			constructor(abX, abY,
+						abWidth, abHeight,
+						abImg){
+							this.x = abX;
+				this.y = abY;
+				this.width = abWidth;
+				this.height = abHeight;
+				this.img = new Image();
+				this.img.src = "secondAb.png"
+			}
+
+			shootingStar(){
+				this.x = this.x + speedHR;
+				this.y = this.y + speedHU;
+
+				if(this.x <= 0){
+					speedHR = 7;
+				}
+				if(this.x >= 750){
+					speedHR = -7;
+				}
+				if(this.y <= 0){
+					speedHU = 7;
+				}
+				if(this.y >= 550){
+					speedHU = -7;
+				}
+			}
+
+
+			draw(){
+				c.drawImage(this.img,
+							this.x,
+							this.y,
+							this.width,
+							this.height)
+			}
+
+			//intersecting other things
+			intersects(obj){
+				if (this.x < obj.x + obj.width &&
+					this.x + this.width > obj.x &&
+					this.y < obj.y + obj.height &&
+					this.y + this.height > obj.y)
+				{
+					return true;
+				}
+				else{
+					return false;
+				}
+			}
+		}
+
+		var bThirdAb = "novis"
+		class thirdAb{
+			constructor(abX, abY,
+						abWidth, abHeight,
+						abImg){
+				this.x = abX;
+				this.y = abY;
+				this.width = abWidth;
+				this.height = abHeight;
+				this.img = new Image();
+				this.img.src = "thirdAb.png"
+			}
+
+			// If this pebble is visible, then draw it on the screen.
+			draw(){
+				c.drawImage(this.img,
+							this.x,
+							this.y,
+							this.width,
+							this.height)
+			}
+
+			//intersecting other things
+			intersects(obj){
+				if (this.x < obj.x + obj.width &&
+					this.x + this.width > obj.x &&
+					this.y < obj.y + obj.height &&
+					this.y + this.height > obj.y)
+				{
+					return true;
+				}
+				else{
+					return false;
+				}
+			}
+		}
+
+		var bFourthAb = "novis"
+		class fourthAb{
+			constructor(abX, abY,
+						abWidth, abHeight,
+						abImg){
+				this.x = abX;
+				this.y = abY;
+				this.width = abWidth;
+				this.height = abHeight;
+				this.img = new Image();
+				this.img.src = "fourthAb.png"
+			}
+
+			// If this pebble is visible, then draw it on the screen.
+			draw(){
+				c.drawImage(this.img,
+							this.x,
+							this.y,
+							this.width,
+							this.height)
+			}
+
+			launch(){
+				if(this.y != 280){
+					this.y = this.y - 1;
+				}
+			}
+
+			//intersecting other things
+			intersects(obj){
+				if (this.x < obj.x + obj.width &&
+					this.x + this.width > obj.x &&
+					this.y < obj.y + obj.height &&
+					this.y + this.height > obj.y)
+				{
+					return true;
+				}
+				else{
+					return false;
+				}
+			}
+		}
+
+		var bFifthAb = "novis"
+		var aFifthAb = "no"
+		class fifthAb{
+			constructor(abX, abY,
+						abWidth, abHeight,
+						abImg){
+				this.x = abX;
+				this.y = abY;
+				this.width = abWidth;
+				this.height = abHeight;
+				this.img = new Image();
+				this.img.src = "fifthAb.png"
+			}
+
+			follow(){
+				this.x = spaceship.x-30;
+				this.y = spaceship.y-30;
+			}
+
+			// If this pebble is visible, then draw it on the screen.
+			draw(){
+				c.drawImage(this.img,
+							this.x,
+							this.y,
+							this.width,
+							this.height)
+			}
+
+			//intersecting other things
+			intersects(obj){
+				if (this.x < obj.x + obj.width &&
+					this.x + this.width > obj.x &&
+					this.y < obj.y + obj.height &&
+					this.y + this.height > obj.y)
+				{
+					return true;
+				}
+				else{
+					return false;
+				}
+			}
+		}
+
+
+		//Winning
+		class win{
+			constructor(abX, abY,
+						abWidth, abHeight,
+						abImg){
+				this.x = abX;
+				this.y = abY;
+				this.width = abWidth;
+				this.height = abHeight;
+				this.img = new Image();
+				this.img.src = "youWon.png"
+			}
+
+			draw(){
+				c.drawImage(this.img,
+							this.x,
+							this.y,
+							this.width,
+							this.height)
+			}
+		}
+
+
+
+
+		class timerClass{
+			constructor(timeIntervalMS){
+				// Initialize oldTime to be the time of creation
+				this.oldTime = new Date();
+
+				// Set interval to elapse before the timer fires
+				this.interval = timeIntervalMS;
+				
+				// Keeps track of the # of milliseconds accumulated since the last firing
+				this.accum = 0;
+			}
+
+			// This method returns true if the timer is ready to fire, false otherwise
+			// If it returns true, then resets fire interval
+			isReady(){
+				var curTime = new Date();
+				var delta = curTime - this.oldTime;
+
+				this.accum += delta;
+				this.oldTime = curTime;
+				if (this.accum > this.interval){
+					this.accum = 0;
+					return true;
+				}
+				else{
+					return false;
+				}
+			}
+		}
+		///////////////////////////////////////////////////////////////////////////////////////////
+
+
+		//Timer class starting
+		var startingTimer = new timerClass(1000)
+		var explosionTime = new timerClass(25)
+		var defenseTime = new timerClass(5000)
+		var waitingDefTime = new timerClass(20000)
+
+
+		//Random Numbers
+		// var mathX = Math.floor(Math.random()*790)+10;
+		// var mathY = Math.floor(Math.random()*400)+30;
+		// var numberOfAlien = Math.floor(Math.random()*5)+1;
+		// var numberOfAlienTr = Math.floor(Math.random()*5)+1;
+		// var numberOfAlienH = Math.floor(Math.random()*3)+1;
+		var numberOfAlien = 5;
+		var numberOfAlienTr = 5;
+		var numberOfAlienH = 3;
+
+		// console.log(mathX)
+		// console.log(mathY) 
+		console.log(numberOfAlien)
+		console.log(numberOfAlienTr)
+		console.log(numberOfAlienH)
+
+
+		//PLANETS
+        var firstPlanet = new firstPlanetClass(300, 25, 250, 250);
+		var secondPlanet = new secondPlanetClass(600, 300, 200, 200);
+		var thirdPlanet = new thirdPlanetClass(50, 250, 190, 190);
+
+		//SPACESHIPS
+		var spaceship = new spaceShipClass(370, 530, 60, 60);
+
+		//ALIEN
+			//First alien ship
+			//x values
+			var alienX = getRandomInt(700, 30)
+			var alien1X = getRandomInt(700, 30)
+			var alien2X = getRandomInt(700, 30)
+			var alien3X = getRandomInt(700, 30)
+			var alien4X = getRandomInt(700, 30)
+
+			//y values
+			var alienY = getRandomInt(400, 30)
+			var alien1Y = getRandomInt(400, 30)
+			var alien2Y = getRandomInt(400, 30)
+			var alien3Y = getRandomInt(400, 30)
+			var alien4Y = getRandomInt(400, 30)
+
+			//alien
+			var alien = new alienShipClass(alienX, alienY, 50, 40);
+			var alien1 = new alienShipClass(alien1X, alien1Y, 50, 40);
+			var alien2 = new alienShipClass(alien2X, alien2Y, 50, 40);
+			var alien3 = new alienShipClass(alien3X, alien3Y, 50, 40);
+			var alien4 = new alienShipClass(alien4X, alien4Y, 50, 40);
+
+			//second alien ship
+			//x values tr
+			var alien1Xtr = getRandomInt(700, 30)
+			var alien2Xtr = getRandomInt(700, 30)
+			var alien3Xtr = getRandomInt(700, 30)
+			var alien4Xtr = getRandomInt(700, 30)
+			var alien5Xtr = getRandomInt(700, 30)
+
+			//y values tr
+			var alien1Ytr = getRandomInt(400, 30)
+			var alien2Ytr = getRandomInt(400, 30)
+			var alien3Ytr = getRandomInt(400, 30)
+			var alien4Ytr = getRandomInt(400, 30)
+			var alien5Ytr = getRandomInt(400, 30)
+
+			var alienTr1 = new alienTrClass(alien1Xtr, alien1Ytr, 70, 70);
+			var alienTr2 = new alienTrClass(alien2Xtr, alien2Ytr, 70, 70);
+			var alienTr3 = new alienTrClass(alien3Xtr, alien3Ytr, 70, 70);
+			var alienTr4 = new alienTrClass(alien4Xtr, alien4Ytr, 70, 70);
+			var alienTr5 = new alienTrClass(alien5Xtr, alien5Ytr, 70, 70);
+
+			//third alien ship
+			//x values H
+			var alien1H = getRandomInt(700, 30)
+			var alien2H = getRandomInt(700, 30)
+			var alien3H = getRandomInt(700, 30)
+
+			//y values H
+			var alien1H = getRandomInt(400, 30)
+			var alien2H = getRandomInt(400, 30)
+			var alien3H = getRandomInt(400, 30)
+
+			var alienH1 = new alienHClass(alien1H, alien1H, 70, 70);
+			var alienH2 = new alienHClass(alien2H, alien2H, 70, 70);
+			var alienH3 = new alienHClass(alien3H, alien3H, 70, 70);
+
+		//ABILITY
+		var fiAb = new firstAb(spaceship.x-130 , spaceship.y-130, 300, 300);
+		var seAb = new secondAb(alienH1.x, alienH1.y, 50, 50)
+		var thAb = new thirdAb(alienH2.x, alienH2.y, 50, 50)
+		var foAb = new fourthAb(alienH3.x, alienH3.y, 60, 60)
+		var fifAb = new fifthAb(alienTr3.x, alienTr3.y, 50, 50);
+
+		//You won
+		var youWon = new win(0, 0, 100, 100);
+
+		/////////////////////////////////////////////////////////////////////////////
+
+		// Canvas context; used to call Canvas methods
+		var c;
+
+		// Canvas width and height.
+		var cWidth, cHeight;
+
+		// Stores the current keyboard state
+		var curkeys = [];
+		
+		// Stores keys that have been newly pressed since last update
+		var newkeys = [];
+
+		// Initializes entire game framework. This method should only be called
+		// once, by the body onload event handler.
+		function gameFrameworkInit(){		
+			// Initialize key arrays
+			for (i = 0; i < 256; i++){
+				curkeys[i] = false;
+				newkeys[i] = false;
+			}
+		
+			// Initialize global variables for canvas
+			c = myCanvas.getContext('2d');
+			cWidth = myCanvas.width;
+			cHeight = myCanvas.height;
+
+
+			// Start listeners for getting keyboard state
+	        window.addEventListener('keydown',
+	        						 function(e){
+										if (!curkeys[e.keyCode]){
+											curkeys[e.keyCode] = true;
+											newkeys[e.keyCode] = true;
+										}
+									 }
+	        					   );
+	        
+	        window.addEventListener('keyup',
+	        						 function(e){ curkeys[e.keyCode] = false; }
+	        					   );
+
+			// Schedule the update function to be called right before the next repaint.
+			// (At the end of the update function, it will schedule itself to be called
+			// again before the NEXT repaint, and so on.
+			window.requestAnimationFrame(gameUpdate);
+		}
+
+
+		var gameState = "starting"
+		var planetCount1 = "";
+		var planetCount2 = "";
+		var planetCount3 = "";
+		// var bBossPlanet = "novis";
+		var youWin = "";
+		var hp = 5000;
+
+
+		var alienhp = 3000;
+		var alien1hp = 3000;
+		var alien2hp = 3000;
+		var alien3hp = 3000;
+		var alien4hp = 3000;
+
+		var alientr1hp = 4000;
+		var alientr2hp = 4000;
+		var alientr3hp = 4000;
+		var alientr4hp = 4000;
+		var alientr5hp = 4000;
+
+		var alienH1hp = 5500;
+		var alienH2hp = 5500;
+		var alienH3hp = 5500;
+
+		var alienk = 3
+		var alientrk = 5
+		var alienHk = 4
+
+
+		var number = 4;
+
+		var foLaunch = "";
+
+		var Def = "off";
+
+		var startingFinder = "fromMain";
+		var abilityFinder = "fromMain"; 
+
+		var defTime = "2"
+		var waitDef = "2"
+		var allowDraw = "no"
+		
+
+		function gameUpdate()
+        {
+			//
+            //  ADD YOUR GAME UPDATE CODE HERE
+            //
+			if(gameState == "starting"){
+				if(newkeys[32]){
+					if(startingFinder == "fromMain"){
+						startingFinder = "";
+						gameState = "mainBg";
+					}
+					if(startingFinder == "fromPause"){
+						startingFinder = "";
+						gameState = "stop";
+					}
+				}
+			}
+
+			if(gameState == "mainBg"){
+				if(curkeys[37]){		//left
+					spaceship.moveLeft()
+				}
+				if(curkeys[39]){		//right
+					spaceship.moveRight()
+				}
+				if(curkeys[38]){		//up
+					spaceship.moveUp()
+				}
+				if(curkeys[40]){		//down
+					spaceship.moveDown()
+				}
+
+				
+				if(curkeys[39] && curkeys[40]){ //right down
+					spaceship.moveRightDown()
+				}
+
+				if(curkeys[39] && curkeys[38]){ //right up
+					spaceship.moveRightUp()
+				}
+
+				if(curkeys[37] && curkeys[38]){ //left up
+					spaceship.moveLeftUp()
+				}
+
+				if(curkeys[37] && curkeys[40]){ //left down
+					spaceship.moveLeftDown()
+				}
+
+				if(spaceship.intersects(firstPlanet)){
+					if(planetCount1 == "win"){
+						if(newkeys[71]){
+							gameState = "safePlanet"
+							spaceship.x = 370;
+							spaceship.y = 530;
+						}
+					}
+					else{
+						if(newkeys[71]){
+							gameState = "wait"
+							spaceship.x = 370;
+							spaceship.y = 530;
+							planetCount1 = "ready"
+						}
+					}
+				}
+				if(spaceship.intersects(secondPlanet)){
+					if(planetCount2 == "win"){
+						if(newkeys[71]){
+							gameState = "safePlanet"
+							spaceship.x = 370;
+							spaceship.y = 530;
+						}
+					}
+					else{
+						if(newkeys[71]){
+							gameState = "wait";
+							spaceship.x = 370;
+							spaceship.y = 530;
+							planetCount2 = "ready"
+						}
+					}
+				}
+				if(spaceship.intersects(thirdPlanet)){
+					if(planetCount3 == "win"){
+						if(newkeys[71]){
+							gameState = "safePlanet"
+							spaceship.x = 370;
+							spaceship.y = 530;
+						}
+					}
+					else{
+						if(newkeys[71]){
+							gameState = "wait"
+							spaceship.x = 370;
+							spaceship.y = 530;
+							planetCount3 = "ready"
+						}
+					}
+				}
+
+				if(spaceship.intersects(youWon)){
+					if(newkeys[16]){
+						gameState = "myWord"
+						spaceship.x = 370;
+						spaceship.y = 530;
+					}
+				}
+
+				// if(spaceship.intersects(planetBoss)){
+				// 	if(newkeys[71]){
+				// 		gameState = "finalGame";
+				// 	}
+				// }
+
+				//if(planetCount1 == "win" && planetCount2 == "win" && planetCount3 == "win"){
+					youWin = "visible";
+				//}
+
+				//barrier of right
+				if(spaceship.x >= 740){
+					speedX = 0;
+				}
+				else{
+					speedX = 4;
+				}
+				//barrier of left
+				if(spaceship.x <= 0){
+					speedXM = 0;
+				}
+				else{
+					speedXM = 4;
+				}
+				//barrier of down
+				if(spaceship.y >= 540){
+					speedY = 0;
+				}
+				else{
+					speedY = 4;
+				}
+				//barrier of up
+				if(spaceship.y <= 0){
+					speedYM = 0;
+				}
+				else{
+					speedYM = 4;
+				}
+
+
+				//sittengs
+	
+				if(newkeys[90]){		//z for see direction again
+					gameState = "starting"
+					startingFinder = "fromMain"
+				}
+				if(newkeys[88]){		//x for see abilities
+					gameState = "ability"
+					abilityFinder = "fromMain"
+				}
+
+			}
+
+/////////////////////////////////////////////////////
+//////////////////////////////////////
+
+			if(gameState == "safePlanet"){
+				if(newkeys[32]){
+					gameState = "mainBg"
+				}
+			}
+ ///////////////////////////////////////
+ ///////////////////////////////////////////////////////
+
+
+
+			if(gameState == "wait"){
+				if(newkeys[32]){
+					gameState = "countDown";
+				}
+			}
+
+			if(gameState == "countDown"){
+				if(number != 0){
+					if(startingTimer.isReady(1000)){
+						number--;
+					}
+					
+				}
+				if(number == 0){
+					gameState = "play"
+					number = 4
+				}
+			}
+
+			if(gameState == "play"){
+				//to pause
+				if(newkeys[80]){ 	//p to pause
+					gameState ="stop"
+				}
+				///////////////////////////////////////////
+				//SPACESHIP THINGS////////
+				if(curkeys[37]){		//left
+					spaceship.moveLeft()
+				}
+				if(curkeys[39]){		//right
+					spaceship.moveRight()
+				}
+				if(curkeys[38]){		//up
+					spaceship.moveUp()
+				}
+				if(curkeys[40]){		//down
+					spaceship.moveDown()
+				}
+
+				
+				if(curkeys[39] && curkeys[40]){ //right down
+					spaceship.moveRightDown()
+				}
+
+				if(curkeys[39] && curkeys[38]){ //right up
+					spaceship.moveRightUp()
+				}
+
+				if(curkeys[37] && curkeys[38]){ //left up
+					spaceship.moveLeftUp()
+				}
+
+				if(curkeys[37] && curkeys[40]){ //left down
+					spaceship.moveLeftDown()
+				}
+				
+				//barrier of right
+				if(spaceship.x >= 740){
+					speedX = 0;
+				}
+				else{
+					speedX = 4;
+				}
+				//barrier of left
+				if(spaceship.x <= 0){
+					speedXM = 0;
+				}
+				else{
+					speedXM = 4;
+				}
+				//barrier of down
+				if(spaceship.y >= 540){
+					speedY = 0;
+				}
+				else{
+					speedY = 4;
+				}
+				//barrier of up
+				if(spaceship.y <= 0){
+					speedYM = 0;
+				}
+				else{
+					speedYM = 4;
+				}
+				/////////////////////////////////////////
+
+
+				///////////////////////////////////////
+				//ALIEN THINGS
+
+				alien.moveToShip();
+				alien1.moveToShip();
+				alien2.moveToShip();
+				alien3.moveToShip();
+				alien4.moveToShip();
+
+				//ALIEN TR THINGS
+
+				alienTr1.moveToShip();
+				alienTr2.moveToShip();
+				alienTr3.moveToShip();
+				alienTr4.moveToShip();
+				alienTr5.moveToShip();
+
+				//ALIEN H THINGS
+
+				alienH1.moveToShip();
+				alienH2.moveToShip();
+				alienH3.moveToShip();
+
+
+				////////////////////////////////////////////
+
+
+				////////////////////////////////////////////
+				//DAMAGE THINGS
+				//intersect with alien 
+				if(Def == "off"){
+					if(alienhp >= 0){
+						if(spaceship.intersects(alien)){
+							hp = hp - 1;
+						}
+					}
+					if(alien1hp >= 0){
+						if(spaceship.intersects(alien1)){
+							hp = hp - 1;
+						}
+					}	
+					if(alien2hp >= 0){
+						if(spaceship.intersects(alien2)){
+							hp = hp - 1;
+						}
+					}
+					if(alien3hp >= 0){
+						if(spaceship.intersects(alien3)){
+							hp = hp - 1;
+						}
+					}
+					if(alien4hp >= 0){
+						if(spaceship.intersects(alien4)){
+							hp = hp - 1;
+						}
+					}
+				
+
+					//intersect with alien tr
+					if(alientr1hp > 0){
+						if(spaceship.intersects(alienTr1)){
+							hp = hp -3;
+						}
+					}
+					if(alientr2hp > 0){
+						if(spaceship.intersects(alienTr2)){
+							hp = hp -3;
+						}
+					}
+					if(alientr3hp > 0){
+						if(spaceship.intersects(alienTr3)){
+							hp = hp -3;
+						}
+					}
+					if(alientr4hp > 0){
+						if(spaceship.intersects(alienTr4)){
+							hp = hp -3;
+						}
+					}
+					if(alientr5hp > 0){
+						if(spaceship.intersects(alienTr5)){
+							hp = hp -3;
+						}
+					}
+
+					//intersect with alien H
+					if(alienH1hp > 0){
+						if(spaceship.intersects(alienH1)){
+							hp = hp - 10;
+						}
+					}
+					if(alienH2hp > 0){
+						if(spaceship.intersects(alienH2)){
+							hp = hp - 10;
+						}
+					}
+					if(alienH3hp > 0){
+						if(spaceship.intersects(alienH3)){
+							hp = hp - 10;
+						}
+				}
+			}
+
+				//intersect first ab with aliens
+				if(bFirstAb == "visible"){
+					//alien
+					if(fiAb.intersects(alien)){		//damage 3
+						alienhp = alienhp - alienk;
+					}
+					if(fiAb.intersects(alien1)){
+						alien1hp = alien1hp - alienk;
+					}
+					if(fiAb.intersects(alien2)){
+						alien2hp = alien2hp - alienk;
+					}
+					if(fiAb.intersects(alien3)){
+						alien3hp = alien3hp - alienk;
+					}
+					if(fiAb.intersects(alien4)){
+						alien4hp = alien4hp - alienk;
+					}
+					
+					//alien tr
+					if(fiAb.intersects(alienTr1)){		//damage 5
+						alientr1hp = alientr1hp - alientrk;
+					}
+					if(fiAb.intersects(alienTr2)){
+						alientr2hp = alientr2hp - alientrk;
+					}
+					if(fiAb.intersects(alienTr3)){
+						alientr3hp = alientr3hp - alientrk;
+					}
+					if(fiAb.intersects(alienTr4)){
+						alientr4hp = alientr4hp - alientrk;
+					}
+					if(fiAb.intersects(alienTr5)){
+						alientr5hp = alientr5hp - alientrk;
+					}
+
+					//alien H
+					if(fiAb.intersects(alienH1)){		//damage 4
+						alienH1hp = alienH1hp - alienHk;
+					}
+					if(fiAb.intersects(alienH2)){
+						alienH2hp = alienH1hp - alienHk;
+					}
+					if(fiAb.intersects(alienH3)){
+						alienH3hp = alienH1hp - alienHk;
+					}
+				}
+
+				if(bSecondAb == "visible"){
+					if(seAb.intersects(spaceship)){
+						if(newkeys[71]){
+							bSecondAb = "nois";
+						}
+					}
+				}
+				if(bSecondAb == "visible1"){
+					//alien
+					if(seAb.intersects(alien)){
+						alienhp = alienhp - 100;
+					}
+					if(seAb.intersects(alien1)){
+						alien1hp = alien1hp - 100;
+					}
+					if(seAb.intersects(alien2)){
+						alien2hp = alien2hp - 100;
+					}
+					if(seAb.intersects(alien3)){
+						alien3hp = alien3hp - 100;
+					}
+					if(seAb.intersects(alien4)){
+						alien4hp = alien4hp - 100;
+					}
+
+					//alien tr
+					if(seAb.intersects(alienTr1)){
+						alientr1hp = alientr1hp - 100;
+					}
+					if(seAb.intersects(alienTr2)){
+						alientr2hp = alientr2hp - 100;
+					}
+					if(seAb.intersects(alienTr3)){
+						alientr3hp = alientr3hp - 100;
+					}
+					if(seAb.intersects(alienTr4)){
+						alientr4hp = alientr4hp - 100;
+					}
+					if(seAb.intersects(alienTr5)){
+						alientr5hp = alientr5hp - 100;
+					}
+
+					//alien H
+					if(seAb.intersects(alienH1)){
+						alienH1hp = alienH1hp - 80;
+					}
+					if(seAb.intersects(alienH2)){
+						alienH2hp = alienH2hp - 80;
+					}
+					if(seAb.intersects(alienH3)){
+						alienH3hp = alienH3hp - 80;
+					}
+
+				}
+
+				if(bSecondAb == "nois"){
+					if(newkeys[72]){	//h
+						seAb.x = spaceship.x;
+						seAb.y = spaceship.y;
+						bSecondAb = "visible1"
+						
+					}
+				}
+				if(bSecondAb == "visible1"){
+					
+					seAb.shootingStar()
+				}
+
+				////////////////////////////////
+
+				if(bThirdAb == "visible"){
+					if(thAb.intersects(spaceship)){
+						if(newkeys[71]){
+							bThirdAb = "nois";
+						}
+					}
+				}
+				if(bThirdAb == "visible1"){
+					//alien
+					if(thAb.intersects(alien)){
+						alienhp = alienhp - 1000;
+						bThirdAb = "nois"
+					}
+					if(thAb.intersects(alien1)){
+						alien1hp = alien1hp - 1000;
+						bThirdAb = "nois"
+					}
+					if(thAb.intersects(alien2)){
+						alien2hp = alien2hp - 1000;
+						bThirdAb = "nois"
+					}
+					if(thAb.intersects(alien3)){
+						alien3hp = alien3hp - 1000;
+						bThirdAb = "nois"
+					}
+					if(thAb.intersects(alien4)){
+						alien4hp = alien4hp - 1000;
+						bThirdAb = "nois"
+					}
+
+					//alien tr
+					if(thAb.intersects(alienTr1)){
+						alientr1hp = alientr1hp - 1000;
+						bThirdAb = "nois"
+					}
+					if(thAb.intersects(alienTr2)){
+						alientr2hp = alientr2hp - 1000;
+						bThirdAb = "nois"
+					}
+					if(thAb.intersects(alienTr3)){
+						alientr3hp = alientr3hp - 1000;
+						bThirdAb = "nois"
+					}
+					if(thAb.intersects(alienTr4)){
+						alientr4hp = alientr4hp - 1000;
+						bThirdAb = "nois"
+					}
+					if(thAb.intersects(alienTr5)){
+						alientr5hp = alientr5hp - 1000;
+						bThirdAb = "nois"
+					}
+
+					//alien H
+					if(thAb.intersects(alienH1)){
+						alienH1hp = alienH1hp - 1600;
+						bThirdAb = "nois"
+					}
+					if(thAb.intersects(alienH2)){
+						alienH2hp = alienH2hp - 1600;
+						bThirdAb = "nois"
+					}
+					if(thAb.intersects(alienH3)){
+						alienH3hp = alienH3hp - 1600;
+						bThirdAb = "nois"
+					}
+
+				}
+
+				if(bThirdAb == "nois"){
+					if(newkeys[66]){	//b
+						thAb.x = spaceship.x;
+						thAb.y = spaceship.y;
+						bThirdAb = "visible1"
+					}
+				}
+
+
+				/////////////////////
+				if(bFourthAb == "visible"){
+					if(foAb.intersects(spaceship)){
+						if(newkeys[71]){	//G
+							bFourthAb = "nois";
+						}
+					}
+				}
+
+				if(bFourthAb == "visible2"){
+					if(explosionTime.isReady(1)){
+						foAb.img.src = "atomicBomb.png"
+						foAb.x = foAb.x-10;
+						foAb.y = foAb.y-10;
+						foAb.width = foAb.width +20;
+						foAb.height = foAb.height +20;
+					}
+					
+					if(foAb.x <= 65){
+
+					//alien
+					if(foAb.intersects(alien)){
+						alienhp = alienhp - 30000;
+					}
+					if(foAb.intersects(alien1)){
+						alien1hp = alien1hp - 30000;
+					}
+					if(foAb.intersects(alien2)){
+						alien2hp = alien2hp - 30000;
+					}
+					if(foAb.intersects(alien3)){
+						alien3hp = alien3hp - 30000;
+					}
+					if(foAb.intersects(alien4)){
+						alien4hp = alien4hp - 30000;
+					}
+
+					//alien tr
+					if(foAb.intersects(alienTr1)){
+						alientr1hp = alientr1hp - 40000;
+					}
+					if(foAb.intersects(alienTr2)){
+						alientr2hp = alientr2hp - 40000;
+					}
+					if(foAb.intersects(alienTr3)){
+						alientr3hp = alientr3hp - 40000;
+					}
+					if(foAb.intersects(alienTr4)){
+						alientr4hp = alientr4hp - 40000;
+					}
+					if(foAb.intersects(alienTr5)){
+						alientr5hp = alientr5hp - 40000;
+					}
+
+					//alien H
+					if(foAb.intersects(alienH1)){
+						alienH1hp = alienH1hp - 50000;
+					}
+					if(foAb.intersects(alienH2)){
+						alienH2hp = alienH2hp - 50000;
+					}
+					if(foAb.intersects(alienH3)){
+						alienH3hp = alienH3hp - 50000;
+					}
+
+					if(Def == "off"){
+						if(foAb.intersects(spaceship)){
+							hp = hp - 5000;
+						}
+					}
+					 
+					foAb.img.src = "fourthAb.png"
+					foAb.x = 380;
+					foAb.y = 600;
+					foAb.width = 60;
+					foAb.height = 60;
+					bFourthAb = "nois"
+					}
+
+					
+				}
+
+
+				if(newkeys[65]){	//a
+					foLaunch += "a";
+				}
+				if(newkeys[84]){	//t
+					foLaunch += "b";
+				}
+				if(newkeys[79]){	//o
+					foLaunch += "c";
+				}
+				if(newkeys[77]){	//m
+					foLaunch += "d";
+				}
+
+				if(bFourthAb == "nois"){
+					if(foLaunch == "abcd"){	//q, p, z, m
+						foAb.x = 380;
+						foAb.y = 600;
+						bFourthAb = "visible1"
+					}
+				}
+
+				if(bFourthAb == "visible1"){
+					foLaunch = "";
+					foAb.launch();
+					if(foAb.y == 280){
+						bFourthAb = "visible2"
+					}
+				}
+
+				//////////////////////////////////
+				if(bFifthAb == "visible"){
+					if(fifAb.intersects(spaceship)){
+						if(newkeys[71]){
+							bFifthAb = "nois";
+						}
+					}
+				}
+				
+
+				if(bFifthAb == "nois"){
+					fifAb.width = 130;
+					fifAb.height = 130;
+					fifAb.follow();
+					if(curkeys[83]){	//s
+						fifAb.img.src = "shieldOn.png"
+						allowDraw = "yes"
+						aFifthAb = "on"
+					}
+					else{
+						allowDraw = "no"
+						aFifthAb = "off"
+					}
+				}
+				
+				
+				
+
+				if(aFifthAb == "on"){
+					Def = "on"
+				}
+				else{
+					Def = "off"
+				}
+
+				//Game over Game state play to game state lost
+				if(hp <= 0){
+					gameState = "lost"
+				}
+
+				//abilities for spaceship
+				if(curkeys[75]){	//k 
+					bFirstAb = "visible"
+				}
+				else{
+					bFirstAb = "novis"
+				}
+				fiAb.follow();
+
+				//////////////////////////////////////////////////
+				///////////////////////////////////////////////
+
+
+				if(numberOfAlienH == 1 && numberOfAlien == 1 && numberOfAlienTr == 1){
+					if(alienQ == "x" && alienTr1Q == "x" && alienH1Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 1 && numberOfAlien == 1 && numberOfAlienTr == 2){
+					if(alienQ == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienH1Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 1 && numberOfAlien == 1 && numberOfAlienTr == 3){
+					if(alienQ == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienTr3Q == "x" && alienH1Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 1 && numberOfAlien == 1 && numberOfAlienTr == 4){
+					if(alienQ == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienTr3Q == "x" && alienTr4Q == "x" && alienH1Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 1 && numberOfAlien == 1 && numberOfAlienTr == 5){
+					if(alienQ == "x" && alienTr1Q == "x" && alienTr2Q == "x" &&
+					 alienTr3Q == "x" && alienTr4Q == "x" && alienTr5Q == "x" && alienH1Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				////
+
+				if(numberOfAlienH == 1 && numberOfAlien == 2 && numberOfAlienTr == 1){
+					if(alienQ == "x" && alien1Q == "x" && alienTr1Q == "x" && alienH1Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 1 && numberOfAlien == 2 && numberOfAlienTr == 2){
+					if(alienQ == "x" && alien1Q == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienH1Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 1 && numberOfAlien == 2 && numberOfAlienTr == 3){
+					if(alienQ == "x" && alien1Q == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienTr3Q == "x" && alienH1Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 1 && numberOfAlien == 2 && numberOfAlienTr == 4){
+					if(alienQ == "x" && alien1Q == "x" && alienTr1Q == "x" && 
+					alienTr2Q == "x"&& alienTr4Q == "x" && alienH1Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 1 && numberOfAlien == 2 && numberOfAlienTr == 5){
+					if(alienQ == "x" && alien1Q == "x" && alienTr1Q == "x" && 
+					alienTr2Q == "x"&& alienTr4Q == "x" && alienTr5Q == "x" && alienH1Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+
+				////
+
+				if(numberOfAlienH == 1 && numberOfAlien == 3 && numberOfAlienTr == 1){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alienTr1Q == "x"&& alienH1Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 1 && numberOfAlien == 3 && numberOfAlienTr == 2){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienH1Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 1 && numberOfAlien == 3 && numberOfAlienTr == 3){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienTr3Q == "x" && alienH1Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 1 && numberOfAlien == 3 && numberOfAlienTr == 4){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alienTr1Q == "x" && 
+					alienTr2Q == "x"&& alienTr4Q == "x" && alienH1Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 1 && numberOfAlien == 3 && numberOfAlienTr == 5){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alienTr1Q == "x" && 
+					alienTr2Q == "x"&& alienTr4Q == "x" && alienTr5Q == "x" && alienH1Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+
+				///
+
+				if(numberOfAlienH == 1 && numberOfAlien == 4 && numberOfAlienTr == 1){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alienTr1Q == "x" && alienH1Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 1 && numberOfAlien == 4 && numberOfAlienTr == 2){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienH1Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 1 && numberOfAlien == 4 && numberOfAlienTr == 3){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienTr3Q == "x" && alienH1Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 1 && numberOfAlien == 4 && numberOfAlienTr == 4){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alienTr1Q == "x" && 
+					alienTr2Q == "x"&& alienTr4Q == "x" && alienH1Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 1 && numberOfAlien == 4 && numberOfAlienTr == 5){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alienTr1Q == "x" && 
+					alienTr2Q == "x"&& alienTr4Q == "x" && alienTr5Q == "x" && alienH1Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+
+				//
+
+				if(numberOfAlienH == 1 && numberOfAlien == 5 && numberOfAlienTr == 1){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alien4Q == "x" && alienTr1Q == "x" && alienH1Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 1 && numberOfAlien == 5 && numberOfAlienTr == 2){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alien4Q == "x" && alienTr1Q == "x"
+					 && alienTr2Q == "x" && alienH1Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 1 && numberOfAlien == 5 && numberOfAlienTr == 3){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alien4Q == "x" && alienTr1Q == "x"
+					 && alienTr2Q == "x" && alienTr3Q == "x" && alienH1Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 1 && numberOfAlien == 5 && numberOfAlienTr == 4){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alien4Q == "x" && alienTr1Q == "x" && 
+					alienTr2Q == "x"&& alienTr4Q == "x" && alienH1Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 1 && numberOfAlien == 5 && numberOfAlienTr == 5){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alien4Q == "x" && alienTr1Q == "x" && 
+					alienTr2Q == "x"&& alienTr4Q == "x" && alienTr5Q == "x"  && alienH1Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+
+				////////////////////////////////////
+				///////////////////////////////////////////////
+
+
+				if(numberOfAlienH == 2 && numberOfAlien == 1 && numberOfAlienTr == 1){
+					if(alienQ == "x" && alienTr1Q == "x" && alienH1Q == "x" && alienH2Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 2 && numberOfAlien == 1 && numberOfAlienTr == 2){
+					if(alienQ == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienH1Q == "x" && alienH2Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 2 && numberOfAlien == 1 && numberOfAlienTr == 3){
+					if(alienQ == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienTr3Q == "x" && alienH1Q == "x" && alienH2Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 2 && numberOfAlien == 1 && numberOfAlienTr == 4){
+					if(alienQ == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienTr3Q == "x" && alienTr4Q == "x" && alienH1Q == "x" && alienH2Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 2 && numberOfAlien == 1 && numberOfAlienTr == 5){
+					if(alienQ == "x" && alienTr1Q == "x" && alienTr2Q == "x" &&
+					 alienTr3Q == "x" && alienTr4Q == "x" && alienTr5Q == "x" && alienH1Q == "x" && alienH2Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				////
+
+				if(numberOfAlienH == 2 && numberOfAlien == 2 && numberOfAlienTr == 1){
+					if(alienQ == "x" && alien1Q == "x" && alienTr1Q == "x" && alienH1Q == "x" && alienH2Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 2 && numberOfAlien == 2 && numberOfAlienTr == 2){
+					if(alienQ == "x" && alien1Q == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienH1Q == "x" && alienH2Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 2 && numberOfAlien == 2 && numberOfAlienTr == 3){
+					if(alienQ == "x" && alien1Q == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienTr3Q == "x" && alienH1Q == "x" && alienH2Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 2 && numberOfAlien == 2 && numberOfAlienTr == 4){
+					if(alienQ == "x" && alien1Q == "x" && alienTr1Q == "x" && 
+					alienTr2Q == "x"&& alienTr4Q == "x" && alienH1Q == "x" && alienH2Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 2 && numberOfAlien == 2 && numberOfAlienTr == 5){
+					if(alienQ == "x" && alien1Q == "x" && alienTr1Q == "x" && 
+					alienTr2Q == "x"&& alienTr4Q == "x" && alienTr5Q == "x" && alienH1Q == "x" && alienH2Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+
+				////
+
+				if(numberOfAlienH == 2 && numberOfAlien == 3 && numberOfAlienTr == 1){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alienTr1Q == "x"&& alienH1Q == "x" && alienH2Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 2 && numberOfAlien == 3 && numberOfAlienTr == 2){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienH1Q == "x" && alienH2Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 2 && numberOfAlien == 3 && numberOfAlienTr == 3){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienTr3Q == "x" && alienH1Q == "x" && alienH2Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 2 && numberOfAlien == 3 && numberOfAlienTr == 4){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alienTr1Q == "x" && 
+					alienTr2Q == "x"&& alienTr4Q == "x" && alienH1Q == "x" && alienH2Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 2 && numberOfAlien == 3 && numberOfAlienTr == 5){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alienTr1Q == "x" && 
+					alienTr2Q == "x"&& alienTr4Q == "x" && alienTr5Q == "x" && alienH1Q == "x" && alienH2Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+
+				///
+
+				if(numberOfAlienH == 2 && numberOfAlien == 4 && numberOfAlienTr == 1){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alienTr1Q == "x" && alienH1Q == "x" && alienH2Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 2 && numberOfAlien == 4 && numberOfAlienTr == 2){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienH1Q == "x" && alienH2Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 2 && numberOfAlien == 4 && numberOfAlienTr == 3){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienTr3Q == "x" && alienH1Q == "x"
+					&& alienH2Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 2 && numberOfAlien == 4 && numberOfAlienTr == 4){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alienTr1Q == "x" && 
+					alienTr2Q == "x"&& alienTr4Q == "x" && alienH1Q == "x" && alienH2Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 2 && numberOfAlien == 4 && numberOfAlienTr == 5){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alienTr1Q == "x" && 
+					alienTr2Q == "x"&& alienTr4Q == "x" && alienTr5Q == "x" && alienH1Q == "x" && alienH2Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+
+				//
+
+				if(numberOfAlienH == 2 && numberOfAlien == 5 && numberOfAlienTr == 1){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alien4Q == "x" && alienTr1Q == "x" && alienH1Q == "x"
+					&& alienH2Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 2 && numberOfAlien == 5 && numberOfAlienTr == 2){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alien4Q == "x" && alienTr1Q == "x"
+					 && alienTr2Q == "x" && alienH1Q == "x" && alienH2Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 2 && numberOfAlien == 5 && numberOfAlienTr == 3){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alien4Q == "x" && alienTr1Q == "x"
+					 && alienTr2Q == "x" && alienTr3Q == "x" && alienH1Q == "x" && alienH2Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 2 && numberOfAlien == 5 && numberOfAlienTr == 4){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alien4Q == "x" && alienTr1Q == "x" && 
+					alienTr2Q == "x"&& alienTr4Q == "x" && alienH1Q == "x" && alienH2Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 2 && numberOfAlien == 5 && numberOfAlienTr == 5){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alien4Q == "x" && alienTr1Q == "x" && 
+					alienTr2Q == "x"&& alienTr4Q == "x" && alienTr5Q == "x"  && alienH1Q == "x" && alienH2Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+
+
+				//////////////////////////////////////////////////////////////////
+				//////////////////////////////////////////////////////////////////
+
+
+				if(numberOfAlienH == 3 && numberOfAlien == 1 && numberOfAlienTr == 1){
+					if(alienQ == "x" && alienTr1Q == "x" && alienH1Q == "x" && alienH2Q == "x" && alienH3Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 3 && numberOfAlien == 1 && numberOfAlienTr == 2){
+					if(alienQ == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienH1Q == "x" && alienH2Q == "x" && alienH3Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 3 && numberOfAlien == 1 && numberOfAlienTr == 3){
+					if(alienQ == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienTr3Q == "x" && alienH1Q == "x" && alienH2Q == "x" && alienH3Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 3 && numberOfAlien == 1 && numberOfAlienTr == 4){
+					if(alienQ == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienTr3Q == "x" && alienTr4Q == "x" && alienH1Q == "x" && alienH2Q == "x" && alienH3Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 3 && numberOfAlien == 1 && numberOfAlienTr == 5){
+					if(alienQ == "x" && alienTr1Q == "x" && alienTr2Q == "x" &&
+					 alienTr3Q == "x" && alienTr4Q == "x" && alienTr5Q == "x" && alienH1Q == "x" && alienH2Q == "x" && alienH3Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				////
+
+				if(numberOfAlienH == 3 && numberOfAlien == 2 && numberOfAlienTr == 1){
+					if(alienQ == "x" && alien1Q == "x" && alienTr1Q == "x" && alienH1Q == "x" && alienH2Q == "x" && alienH3Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 3 && numberOfAlien == 2 && numberOfAlienTr == 2){
+					if(alienQ == "x" && alien1Q == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienH1Q == "x" && alienH2Q == "x" && alienH3Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 3 && numberOfAlien == 2 && numberOfAlienTr == 3){
+					if(alienQ == "x" && alien1Q == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienTr3Q == "x" && alienH1Q == "x" && alienH2Q == "x" && alienH3Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 3 && numberOfAlien == 2 && numberOfAlienTr == 4){
+					if(alienQ == "x" && alien1Q == "x" && alienTr1Q == "x" && 
+					alienTr2Q == "x"&& alienTr4Q == "x" && alienH1Q == "x" && alienH2Q == "x" && alienH3Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 3 && numberOfAlien == 2 && numberOfAlienTr == 5){
+					if(alienQ == "x" && alien1Q == "x" && alienTr1Q == "x" && 
+					alienTr2Q == "x"&& alienTr4Q == "x" && alienTr5Q == "x" && alienH1Q == "x" && alienH2Q == "x" && alienH3Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+
+				////
+
+				if(numberOfAlienH == 3 && numberOfAlien == 3 && numberOfAlienTr == 1){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alienTr1Q == "x"&& alienH1Q == "x" && alienH2Q == "x"
+					&& alienH3Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 3 && numberOfAlien == 3 && numberOfAlienTr == 2){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienH1Q == "x" && alienH2Q == "x"
+					&& alienH3Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 3 && numberOfAlien == 3 && numberOfAlienTr == 3){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienTr3Q == "x" && alienH1Q == "x" && alienH2Q == "x"
+					&& alienH3Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 3 && numberOfAlien == 3 && numberOfAlienTr == 4){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alienTr1Q == "x" && 
+					alienTr2Q == "x"&& alienTr4Q == "x" && alienH1Q == "x" && alienH2Q == "x" && alienH3Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 3 && numberOfAlien == 3 && numberOfAlienTr == 5){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alienTr1Q == "x" && 
+					alienTr2Q == "x"&& alienTr4Q == "x" && alienTr5Q == "x" && alienH1Q == "x" && alienH2Q == "x" && alienH3Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+
+				///
+
+				if(numberOfAlienH == 3 && numberOfAlien == 4 && numberOfAlienTr == 1){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alienTr1Q == "x" && alienH1Q == "x" && alienH2Q == "x"
+					&& alienH3Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 3 && numberOfAlien == 4 && numberOfAlienTr == 2){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienH1Q == "x" && alienH2Q == "x"
+					&& alienH3Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 3 && numberOfAlien == 4 && numberOfAlienTr == 3){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alienTr1Q == "x" && alienTr2Q == "x" && alienTr3Q == "x" && alienH1Q == "x"
+					&& alienH2Q == "x" && alienH3Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 3 && numberOfAlien == 4 && numberOfAlienTr == 4){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alienTr1Q == "x" && 
+					alienTr2Q == "x"&& alienTr4Q == "x" && alienH1Q == "x" && alienH2Q == "x" && alienH3Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 3 && numberOfAlien == 4 && numberOfAlienTr == 5){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alienTr1Q == "x" && 
+					alienTr2Q == "x"&& alienTr4Q == "x" && alienTr5Q == "x" && alienH1Q == "x" && alienH2Q == "x" && alienH3Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+
+				//
+
+				if(numberOfAlienH == 3 && numberOfAlien == 5 && numberOfAlienTr == 1){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alien4Q == "x" && alienTr1Q == "x" && alienH1Q == "x" 
+					&& alienH2Q == "x"  && alienH3Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 3 && numberOfAlien == 5 && numberOfAlienTr == 2){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alien4Q == "x" && alienTr1Q == "x"
+					 && alienTr2Q == "x" && alienH1Q == "x" && alienH2Q == "x" && alienH3Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 3 && numberOfAlien == 5 && numberOfAlienTr == 3){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alien4Q == "x" && alienTr1Q == "x"
+					 && alienTr2Q == "x" && alienTr3Q == "x" && alienH1Q == "x" && alienH2Q == "x" && alienH3Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 3 && numberOfAlien == 5 && numberOfAlienTr == 4){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alien4Q == "x" && alienTr1Q == "x" && 
+					alienTr2Q == "x"&& alienTr4Q == "x" && alienH1Q == "x" && alienH2Q == "x" && alienH3Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+				if(numberOfAlienH == 3 && numberOfAlien == 5 && numberOfAlienTr == 5){
+					if(alienQ == "x" && alien1Q == "x" && alien2Q == "x" && alien3Q == "x" && alien4Q == "x" && alienTr1Q == "x" && 
+					alienTr2Q == "x"&& alienTr4Q == "x" && alienTr5Q == "x"  && alienH1Q == "x" && alienH2Q == "x" && alienH3Q == "x"){
+						if(newkeys[32]){
+							gameState = "win"
+						}
+					}
+				}
+
+
+
+
+			}
+
+
+			if(gameState == "lost"){
+				if(newkeys[32]){
+				//Alien
+					//x values
+					alien.x = getRandomInt(700, 30);
+					alien1.x = getRandomInt(700, 30);
+					alien2.x = getRandomInt(700, 30);
+					alien3.x = getRandomInt(700, 30);
+					alien4.x = getRandomInt(700, 30);
+
+					//y values
+					alien.y = getRandomInt(400, 30);
+					alien1.y = getRandomInt(400, 30);
+					alien2.y = getRandomInt(400, 30);
+					alien3.y = getRandomInt(400, 30);
+					alien4.y = getRandomInt(400, 30);
+				
+				//Alien tr
+					//x values tr
+					alienTr1.x = getRandomInt(700, 30);
+					alienTr2.x = getRandomInt(700, 30);
+					alienTr3.x = getRandomInt(700, 30);
+					alienTr4.x = getRandomInt(700, 30);
+					alienTr5.x = getRandomInt(700, 30);
+
+					//y values tr
+					alienTr1.y = getRandomInt(400, 30);
+					alienTr2.y = getRandomInt(400, 30);
+					alienTr3.y = getRandomInt(400, 30);
+					alienTr4.y = getRandomInt(400, 30);
+					alienTr5.y = getRandomInt(400, 30);
+
+				//Alien H
+					//x values H
+					alienH1.x = getRandomInt(700, 30);
+					alienH2.x = getRandomInt(700, 30);
+					alienH3.x = getRandomInt(700, 30);
+
+
+					//y values H
+					alienH1.y = getRandomInt(400, 30);
+					alienH2.y = getRandomInt(400, 30);
+					alienH3.y = getRandomInt(400, 30);
+					
+
+					//random number of aliens
+					// numberOfAlien = Math.floor(Math.random()*5)+1;
+					// numberOfAlienTr = Math.floor(Math.random()*5)+1;
+					numberOfAlien = 5;
+					numberOfAlienTr = 5;
+					numberOfAlienH = 3;
+
+					//random number of location
+					mathX = Math.floor(Math.random()*790)+10;
+					mathY = Math.floor(Math.random()*400)+30;
+
+					//space ship location
+					spaceship.x = 370;
+					spaceship.y = 530;
+
+					//alien hp
+					alienhp = "3000"
+					alien1hp = "3000"
+					alien2hp = "3000"
+					alien3hp = "3000"
+					alien4hp = "3000"
+
+					alientr1hp = "4000"
+					alientr2hp = "4000"
+					alientr3hp = "4000"
+					alientr4hp = "4000"
+					alientr5hp = "4000"
+
+					alienH1hp = "5500"
+					alienH2hp = "5500"
+					alienH3hp = "5500"
+
+					//spaceship hp
+					hp = "5000"
+
+					//atomic bomb
+					foLaunch = "";
+					
+
+					//changes
+					gameState = "mainBg";
+				}
+
+				
+			}
+
+			if(gameState == "ability"){
+				if(newkeys[32]){
+					if(abilityFinder == "fromMain"){
+						abilityFinder = "";
+						gameState = "mainBg";
+					}
+					if(abilityFinder == "fromPause"){
+						abilityFinder = "";
+						gameState = "stop";
+					}
+				}
+			}
+			console.log(abilityFinder)
+			console.log(startingFinder)
+
+			if(gameState == "stop"){
+				//spaceship (normal speed is 4)
+				speedX = 0;
+				speedY = 0;
+				speedXM = 0;
+				speedYM = 0;
+
+				//alien movemoent
+				//alien (normal speed 0.5)
+				alienMove = 0;
+				//alientr (normal speed 0.8)
+				alienMove1 = 0;
+				//alienH (normal speed 0.9)
+				alienMove2 = 0;
+				
+				if(newkeys[79]){
+					//spaceship
+					speedX = 4;
+					speedY = 4;
+					speedXM = 4;
+					speedYM = 4;
+
+					//alien movemoent
+					//alien
+					alienMove = 0.5;
+					//alientr
+					alienMove1 = 0.8;
+					//alienH
+					alienMove2 = 0.9;
+					gameState = "play"
+				}
+
+				if(newkeys[90]){		//z for see direction again
+					startingFinder = "fromPause"
+					gameState = "starting"
+				}
+				if(newkeys[88]){		//x for see abilities
+					abilityFinder = "fromPause"
+					gameState = "ability"
+				}
+			}
+
+			if(gameState == "win"){
+				if(newkeys[13]){
+					if(planetCount1 == "ready"){
+						planetCount1 ="win"
+					}
+					if(planetCount2 == "ready"){
+						planetCount2 = "win"
+					}
+					if(planetCount3 == "ready"){
+						planetCount3 = "win"
+					}
+					gameState = "mainBg"
+					
+					//spaceship
+					spaceship.x = 370;
+					spaceship.y = 530;
+
+					//aliens
+					alienQ = "y"
+					alien1Q = "y"
+					alien2Q = "y"
+					alien3Q = "y"
+					alien4Q = "y"
+					
+					alienTr1Q = "y"
+					alienTr2Q = "y"
+					alienTr3Q = "y"
+					alienTr4Q = "y"
+					alienTr5Q = "y"
+
+					alienH1Q = "y"
+					alienH2Q = "y"
+					alienH3Q = "y"
+					alienH4Q = "y"
+					alienH5Q = "y"
+
+					//alien hp
+					alienhp = "3000"
+					alien1hp = "3000"
+					alien2hp = "3000"
+					alien3hp = "3000"
+					alien4hp = "3000"
+
+					alientr1hp = "4000"
+					alientr2hp = "4000"
+					alientr3hp = "4000"
+					alientr4hp = "4000"
+					alientr5hp = "4000"
+
+					alienH1hp = "5500"
+					alienH2hp = "5500"
+					alienH3hp = "5500"
+					alienH4hp = "5500"
+					alienH5hp = "5500"
+
+					//spaceship hp
+					hp = "5000"
+
+					//Alien
+					//x values
+					alien.x = getRandomInt(700, 30);
+					alien1.x = getRandomInt(700, 30);
+					alien2.x = getRandomInt(700, 30);
+					alien3.x = getRandomInt(700, 30);
+					alien4.x = getRandomInt(700, 30);
+
+					//y values
+					alien.y = getRandomInt(400, 30);
+					alien1.y = getRandomInt(400, 30);
+					alien2.y = getRandomInt(400, 30);
+					alien3.y = getRandomInt(400, 30);
+					alien4.y = getRandomInt(400, 30);
+				
+				//Alien tr
+					//x values tr
+					alienTr1.x = getRandomInt(700, 30);
+					alienTr2.x = getRandomInt(700, 30);
+					alienTr3.x = getRandomInt(700, 30);
+					alienTr4.x = getRandomInt(700, 30);
+					alienTr5.x = getRandomInt(700, 30);
+
+					//y values tr
+					alienTr1.y = getRandomInt(400, 30);
+					alienTr2.y = getRandomInt(400, 30);
+					alienTr3.y = getRandomInt(400, 30);
+					alienTr4.y = getRandomInt(400, 30);
+					alienTr5.y = getRandomInt(400, 30);
+
+				//Alien H
+					//x values H
+					alienH1.x = getRandomInt(700, 30);
+					alienH2.x = getRandomInt(700, 30);
+					alienH3.x = getRandomInt(700, 30);
+
+
+					//y values H
+					alienH1.y = getRandomInt(400, 30);
+					alienH2.y = getRandomInt(400, 30);
+					alienH3.y = getRandomInt(400, 30);
+
+
+					//random number of aliens
+					// numberOfAlien = Math.floor(Math.random()*5)+1;
+					// numberOfAlienTr = Math.floor(Math.random()*5)+1;
+					// numberOfAlienH = Math.floor(Math.random()*3)+1;
+					numberOfAlien = 5;
+					numberOfAlienTr = 5;
+					numberOfAlienH = 3;
+
+					//random number of location
+					mathX = Math.floor(Math.random()*790)+10;
+					mathY = Math.floor(Math.random()*400)+30;
+
+					if(bSecondAb == "visible"){
+						bSecondAb = "novis"
+					}
+					if(bSecondAb == "visible1"){
+						bSecondAb = "nois"
+					}
+					
+					if(bThirdAb == "visible"){
+						bThirdAb = "nois"
+					}
+					if(bThirdAb == "visible1"){
+						bThirdAb = "nois"
+					}
+
+					if(bFourthAb == "visible"){
+						bFourthAb = "nois"
+					}
+					if(bFourthAb == "visible1"){
+						bFourthAb = "nois"
+					}
+
+					if(bFifthAb == "visible"){
+						bFifthAb = "nois"
+					}
+					if(bFifthAb == "visible1"){
+						bFifthAb = "nois"
+					}
+
+					//atomic bomb
+					foLaunch = "";
+
+				}
+			}
+
+			console.log(gameState)
+			console.log(planetCount1)
+			console.log(planetCount2)
+			console.log(planetCount3)
+
+
+
+
+			if(gameState == "myWord"){
+				if(curkeys[37]){		//left
+					spaceship.moveLeft()
+				}
+				if(curkeys[39]){		//right
+					spaceship.moveRight()
+				}
+				if(curkeys[38]){		//up
+					spaceship.moveUp()
+				}
+				if(curkeys[40]){		//down
+					spaceship.moveDown()
+				}
+
+				if(newkeys[32]){
+					gameState = "mainBg"
+				}
+			}
+
+
+			
+			// ******DO NOT ADD OR MODIFY ANY CODE BELOW HERE******
+
+			// Reset newkeys
+			for (i = 0; i < 256; i++){
+				newkeys[i] = false;
+			}
+
+			// At the end of the update function, repaint the screen
+			gameDraw();
+				
+			// Last thing the update function does is to schedule itself to be called
+			// again before the next repaint
+			window.requestAnimationFrame(gameUpdate);
+		}
+
+		//Alien
+		var alienQ = "y";
+		var alien1Q = "y";
+		var alien2Q = "y";
+		var alien3Q = "y";
+		var alien4Q = "y";
+		//Alien tr
+		var alienTr1Q = "y";
+		var alienTr2Q = "y";
+		var alienTr3Q = "y";
+		var alienTr4Q = "y";
+		var alienTr5Q = "y";
+		//Alien H
+		var alienH1Q = "y";
+		var alienH2Q = "y";
+		var alienH3Q = "y";
+
+
+		var text = ""
+
+		function gameDraw(){
+			// Clear the canvas before we draw the current frame
+			c.clearRect(0,0,cWidth,cHeight);
+
+            //
+            //  ADD YOUR DRAW CODE HERE
+            //
+			
+			if(gameState == "starting"){
+				//background image
+				var bg = new Image();
+				bg.src = "background.jpg";
+				c.drawImage(bg, 0, 0, 800, 600);
+
+				c.font = "50px Times"
+				c.fillStyle = "white"
+				c.fillText("Welcome to Glactic War", 150, 100)
+				
+				c.font = "30px Times"
+				c.fillText("Press 'space bar' to start", 250, 130)
+
+				c.font = "45px Times"
+				c.fillText("Direction", 300, 200)
+
+				c.font = "35px Times"
+				c.fillText("Use button 'z' to see this direction again", 125, 250)
+				c.fillText("Use button 'x' to see your abilities", 125, 290)
+				c.fillText("Use button 'p' to pause the game", 125, 330)
+				c.fillText("Use button 'o' to unpause the game", 125, 370)
+			}
+
+			if(gameState == "mainBg"){
+				//background image
+				var bg = new Image();
+				bg.src = "background2.jpg";
+				c.drawImage(bg, 0, 0, 800, 600);
+
+				//planet blue
+				firstPlanet.draw();
+				secondPlanet.draw();
+				thirdPlanet.draw();
+				if(youWin == "visible"){
+					youWon.draw(); 
+				}
+				//space ship draw
+				spaceship.draw();
+
+				
+
+				c.font = "35px Times"
+				if(spaceship.intersects(firstPlanet)){
+					c.fillText("Use button 'g' to enter", 10, 550)
+				}
+				if(spaceship.intersects(secondPlanet)){
+					c.fillText("Use button 'g' to enter", 10, 550)
+				}
+				if(spaceship.intersects(thirdPlanet)){
+					c.fillText("Use button 'g' to enter", 10, 550)
+				}
+			}
+
+			if(gameState == "play"){
+				//background image
+				var bg = new Image();
+				bg.src = "background1.jpg";
+				c.drawImage(bg, 0, 0, 800, 600);
+
+				//hp board
+				c.font = "25px Arial";
+				c.fillStyle = "white";
+				c.fillText(hp, spaceship.x, spaceship.y);
+				c.fillText(hp, 720, 575)
+
+				//ability #5 must be under spaceship so i putting before spaceship
+				if(bFifthAb == "visible"){
+					fifAb.draw()
+				}
+				if(allowDraw == "yes"){
+					fifAb.draw()
+				}
+
+				//space ship draw
+				spaceship.draw();
+
+				if(seAb.intersects(spaceship)){
+					if(bSecondAb == "visible"){
+						c.font = 30
+						c.fillText("Use button 'G' to pick it up", 10, 560)
+						text = "Use 'space bar' to teleport"
+					}
+				}
+
+				if(thAb.intersects(spaceship)){
+					if(bThirdAb == "visible"){
+						c.font = 30
+						c.fillText("Use button 'G' to pick it up", 10, 560)
+						text = "Use 'space bar' to teleport"
+					}
+				}
+
+				if(foAb.intersects(spaceship)){
+					if(bFourthAb == "visible"){
+						c.font = 30
+						c.fillText("Use button 'G' to pick it up", 10, 560)
+						text = "Use 'space bar' to teleport"
+					}
+				}
+
+				if(fifAb.intersects(spaceship)){
+					if(bFifthAb == "visible"){
+						c.font = 30
+						c.fillText("Use button 'G' to pick it up", 10, 560)
+						text = "Use 'space bar' to teleport"
+					}
+				}
+
+				c.fillText(text, 450, 560)
+
+
+				//alien draw
+				if(numberOfAlien == 1){
+
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alienhp > 0){
+						c.fillText(alienhp, alien.x, alien.y);
+						alien.draw();
+					}
+					else{
+						alienQ = "x"
+					}
+
+				}
+				if(numberOfAlien == 2){
+
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alienhp > 0){
+						alien.draw();
+						c.fillText(alienhp, alien.x, alien.y);
+					}
+					else{
+						alienQ = "x"
+					}
+					if(alien1hp > 0){
+						alien1.draw();
+						c.fillText(alien1hp, alien1.x, alien1.y);
+					}
+					else{
+						alien1Q = "x"
+					}
+
+				}
+				if(numberOfAlien == 3){
+
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alienhp > 0){
+						alien.draw();
+						c.fillText(alienhp, alien.x, alien.y);
+					}
+					else{
+						alienQ = "x"
+					}
+					if(alien1hp > 0){
+						alien1.draw();
+						c.fillText(alien1hp, alien1.x, alien1.y);
+					}
+					else{
+						alien1Q = "x"
+					}
+					if(alien2hp > 0){
+						alien2.draw();
+						c.fillText(alien2hp, alien2.x, alien2.y);
+					}
+					else{
+						alien2Q = "x"
+					}
+					
+				}
+				if(numberOfAlien == 4){
+
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alienhp > 0){
+						alien.draw();
+						c.fillText(alienhp, alien.x, alien.y);
+					}
+					else{
+						alienQ = "x"
+					}
+					if(alien1hp > 0){
+						alien1.draw();
+						c.fillText(alien1hp, alien1.x, alien1.y);
+					}
+					else{
+						alien1Q = "x"
+					}
+					if(alien2hp > 0){
+						alien2.draw();
+						c.fillText(alien2hp, alien2.x, alien2.y);
+					}
+					else{
+						alien2Q = "x"
+					}
+					if(alien3hp > 0){
+						alien3.draw();
+						c.fillText(alien3hp, alien3.x, alien3.y);
+					}
+					else{
+						alien3Q = "x"
+					}
+
+				}
+				if(numberOfAlien == 5){
+
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alienhp > 0){
+						alien.draw();
+						c.fillText(alienhp, alien.x, alien.y);
+					}
+					else{
+						alienQ = "x"
+					}
+					if(alien1hp > 0){
+						alien1.draw();
+						c.fillText(alien1hp, alien1.x, alien1.y);
+					}
+					else{
+						alien1Q = "x"
+					}
+					if(alien2hp > 0){
+						alien2.draw();
+						c.fillText(alien2hp, alien2.x, alien2.y);
+					}
+					else{
+						alien2Q = "x"
+					}
+					if(alien3hp > 0){
+						alien3.draw();
+						c.fillText(alien3hp, alien3.x, alien3.y);
+					}
+					else{
+						alien3Q = "x"
+					}
+					if(alien4hp > 0){
+						alien4.draw();
+						c.fillText(alien4hp, alien4.x, alien4.y);
+					}
+					else{
+						alien4Q = "x"
+					}
+					
+				}
+
+				//alien tr draw
+				if(numberOfAlienTr == 1){
+
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alientr1hp > 0){
+						alienTr1.draw();
+						c.fillText(alientr1hp, alienTr1.x, alienTr1.y);
+					}
+					else{
+						alienTr1Q = "x";
+					}
+				}
+				if(numberOfAlienTr == 2){
+
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alientr1hp > 0){
+						alienTr1.draw();
+						c.fillText(alientr1hp, alienTr1.x, alienTr1.y);
+					}
+					else{
+						alienTr1Q = "x";
+					}
+				
+					if(alientr2hp > 0){
+						alienTr2.draw();
+						c.fillText(alientr2hp, alienTr2.x, alienTr2.y);
+					}
+					else{
+						alienTr2Q = "x";
+					}
+
+				}
+				if(numberOfAlienTr == 3){
+
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alientr1hp > 0){
+						alienTr1.draw();
+						c.fillText(alientr1hp, alienTr1.x, alienTr1.y);
+					}
+					else{
+						alienTr1Q = "x";
+					}
+					if(alientr2hp > 0){
+						alienTr2.draw();
+						c.fillText(alientr2hp, alienTr2.x, alienTr2.y);
+					}
+					else{
+						alienTr2Q = "x";
+					}
+					if(alientr3hp > 0){
+						alienTr3.draw();
+						c.fillText(alientr3hp, alienTr3.x, alienTr3.y);
+					}
+					else{
+						alienTr3Q = "x";
+						if(bFifthAb == "novis"){
+							bFifthAb = "visible"
+						}
+					}
+
+				}
+				if(numberOfAlienTr == 4){
+
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alientr1hp > 0){
+						alienTr1.draw();
+						c.fillText(alientr1hp, alienTr1.x, alienTr1.y);
+					}
+					else{
+						alienTr1Q = "x";
+					}
+					if(alientr2hp > 0){
+						alienTr2.draw();
+						c.fillText(alientr2hp, alienTr2.x, alienTr2.y);
+					}
+					else{
+						alienTr2Q = "x";
+					}
+					if(alientr3hp > 0){
+						alienTr3.draw();
+						c.fillText(alientr3hp, alienTr3.x, alienTr3.y);
+					}
+					else{
+						alienTr3Q = "x";
+						if(bFifthAb == "novis"){
+							bFifthAb = "visible"
+						}
+					}
+					if(alientr4hp > 0){
+						alienTr4.draw();
+						c.fillText(alientr4hp, alienTr4.x, alienTr4.y);
+					}
+					else{
+						alienTr4Q = "x";
+					}
+
+				}
+				if(numberOfAlienTr == 5){
+
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alientr1hp > 0){
+						alienTr1.draw();
+						c.fillText(alientr1hp, alienTr1.x, alienTr1.y);
+					}
+					else{
+						alienTr1Q = "x";
+					}
+					if(alientr2hp > 0){
+						alienTr2.draw();
+						c.fillText(alientr2hp, alienTr2.x, alienTr2.y);
+					}
+					else{
+						alienTr2Q = "x";
+					}
+					if(alientr3hp > 0){
+						alienTr3.draw();
+						c.fillText(alientr3hp, alienTr3.x, alienTr3.y);
+					}
+					else{
+						alienTr3Q = "x";
+						if(bFifthAb == "novis"){
+							bFifthAb = "visible"
+						}
+					}
+					if(alientr4hp > 0){
+						alienTr4.draw();
+						c.fillText(alientr4hp, alienTr4.x, alienTr4.y);
+					}
+					else{
+						alienTr4Q = "x";
+					}
+					if(alientr5hp > 0){
+						alienTr5.draw();
+						c.fillText(alientr5hp, alienTr5.x, alienTr5.y);
+					}
+					else{
+						alienTr5Q = "x";
+					}
+
+				}
+
+				//Alien H
+				if(numberOfAlienH == 1){
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alienH1hp > 0){
+						alienH1.draw();
+						c.fillText(alienH1hp, alienH1.x, alienH1.y);
+					}
+					else{
+						alienH1Q = "x";
+						if(bSecondAb == "novis"){
+							bSecondAb = "visible";
+						}
+					}
+				}
+
+				if(numberOfAlienH == 2){
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alienH1hp > 0){
+						alienH1.draw();
+						c.fillText(alienH1hp, alienH1.x, alienH1.y);
+					}
+					else{
+						alienH1Q = "x";
+						if(bSecondAb == "novis"){
+							bSecondAb = "visible";
+						}
+					}
+
+					if(alienH2hp > 0){
+						alienH2.draw();
+						c.fillText(alienH2hp, alienH2.x, alienH2.y);
+					}
+					else{
+						alienH2Q = "x";
+						if(bThirdAb == "novis"){
+							bThirdAb = "visible";
+						}
+					}
+				}
+
+				if(numberOfAlienH == 3){
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alienH1hp > 0){
+						alienH1.draw();
+						c.fillText(alienH1hp, alienH1.x, alienH1.y);
+					}
+					else{
+						alienH1Q = "x";
+						if(bSecondAb == "novis"){
+							bSecondAb = "visible";
+						}
+					}
+
+					if(alienH2hp > 0){
+						alienH2.draw();
+						c.fillText(alienH2hp, alienH2.x, alienH2.y);
+					}
+					else{
+						alienH2Q = "x";
+						if(bThirdAb == "novis"){
+							bThirdAb = "visible";
+						}
+					}
+
+					if(alienH3hp > 0){
+						alienH3.draw();
+						c.fillText(alienH3hp, alienH3.x, alienH3.y);
+					}
+					else{
+						alienH3Q = "x";
+						if(bFourthAb == "novis"){
+							bFourthAb = "visible";
+						}
+					}
+				}
+
+
+				//ability
+				//1
+				if(bFirstAb == "visible"){
+					fiAb.draw()
+				}
+
+				//2
+				if(bSecondAb == "visible"){
+					seAb.draw()
+				}
+				if(bSecondAb == "visible1"){
+					seAb.draw()
+				}
+
+				//3
+				if(bThirdAb == "visible"){
+					thAb.draw()
+				}
+				if(bThirdAb == "visible1"){
+					thAb.draw()
+				}
+				
+				//4
+				if(bFourthAb == "visible"){
+					foAb.draw()
+				}
+				if(bFourthAb == "visible1"){
+					foAb.draw()
+				}
+				if(bFourthAb == "visible2"){
+					foAb.draw()
+				}
+				
+				
+			}
+
+			if(gameState == "wait"){
+				//background image
+				var bg = new Image();
+				bg.src = "background1.jpg";
+				c.drawImage(bg, 0, 0, 800, 600);
+
+				//space ship draw
+				spaceship.draw();
+
+				//alien draw
+				if(numberOfAlien == 1){
+
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alienhp > 0){
+						c.fillText(alienhp, alien.x, alien.y);
+						alien.draw();
+					}
+
+				}
+					if(numberOfAlien == 2){
+
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alienhp > 0){
+						alien.draw();
+						c.fillText(alienhp, alien.x, alien.y);
+					}
+					if(alien1hp > 0){
+						alien1.draw();
+						c.fillText(alien1hp, alien1.x, alien1.y);
+					}
+
+				}
+					if(numberOfAlien == 3){
+
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alienhp > 0){
+						alien.draw();
+						c.fillText(alienhp, alien.x, alien.y);
+					}
+					if(alien1hp > 0){
+						alien1.draw();
+						c.fillText(alien1hp, alien1.x, alien1.y);
+					}
+					if(alien2hp > 0){
+						alien2.draw();
+						c.fillText(alien2hp, alien2.x, alien2.y);
+					}
+
+				}
+					if(numberOfAlien == 4){
+
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alienhp > 0){
+						alien.draw();
+						c.fillText(alienhp, alien.x, alien.y);
+					}
+					if(alien1hp > 0){
+						alien1.draw();
+						c.fillText(alien1hp, alien1.x, alien1.y);
+					}
+					if(alien2hp > 0){
+						alien2.draw();
+						c.fillText(alien2hp, alien2.x, alien2.y);
+					}
+					if(alien3hp > 0){
+						alien3.draw();
+						c.fillText(alien3hp, alien3.x, alien3.y);
+					}
+
+				}
+					if(numberOfAlien == 5){
+
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alienhp > 0){
+						alien.draw();
+						c.fillText(alienhp, alien.x, alien.y);
+					}
+					if(alien1hp > 0){
+						alien1.draw();
+						c.fillText(alien1hp, alien1.x, alien1.y);
+					}
+					if(alien2hp > 0){
+						alien2.draw();
+						c.fillText(alien2hp, alien2.x, alien2.y);
+					}
+					if(alien3hp > 0){
+						alien3.draw();
+						c.fillText(alien3hp, alien3.x, alien3.y);
+					}
+					if(alien4hp > 0){
+						alien4.draw();
+						c.fillText(alien4hp, alien4.x, alien4.y);
+					}
+
+				}
+
+				if(numberOfAlienTr == 1){
+
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alientr1hp > 0){
+						alienTr1.draw();
+						c.fillText(alientr1hp, alienTr1.x, alienTr1.y);
+					}
+				}
+					if(numberOfAlienTr == 2){
+
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alientr1hp > 0){
+						alienTr1.draw();
+						c.fillText(alientr1hp, alienTr1.x, alienTr1.y);
+					}
+					if(alientr2hp > 0){
+						alienTr2.draw();
+						c.fillText(alientr2hp, alienTr2.x, alienTr2.y);
+					}
+
+				}
+					if(numberOfAlienTr == 3){
+
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alientr1hp > 0){
+						alienTr1.draw();
+						c.fillText(alientr1hp, alienTr1.x, alienTr1.y);
+					}
+					if(alientr2hp > 0){
+						alienTr2.draw();
+						c.fillText(alientr2hp, alienTr2.x, alienTr2.y);
+					}
+					if(alientr3hp > 0){
+						alienTr3.draw();
+						c.fillText(alientr3hp, alienTr3.x, alienTr3.y);
+					}
+
+				}
+					if(numberOfAlienTr == 4){
+
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alientr1hp > 0){
+						alienTr1.draw();
+						c.fillText(alientr1hp, alienTr1.x, alienTr1.y);
+					}
+					if(alientr2hp > 0){
+						alienTr2.draw();
+						c.fillText(alientr2hp, alienTr2.x, alienTr2.y);
+					}
+					if(alientr3hp > 0){
+						alienTr3.draw();
+						c.fillText(alientr3hp, alienTr3.x, alienTr3.y);
+					}
+					if(alientr4hp > 0){
+						alienTr4.draw();
+						c.fillText(alientr4hp, alienTr4.x, alienTr4.y);
+					}
+
+				}
+					if(numberOfAlienTr == 5){
+
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alientr1hp > 0){
+						alienTr1.draw();
+						c.fillText(alientr1hp, alienTr1.x, alienTr1.y);
+					}
+					if(alientr2hp > 0){
+						alienTr2.draw();
+						c.fillText(alientr2hp, alienTr2.x, alienTr2.y);
+					}
+					if(alientr3hp > 0){
+						alienTr3.draw();
+						c.fillText(alientr3hp, alienTr3.x, alienTr3.y);
+					}
+					if(alientr4hp > 0){
+						alienTr4.draw();
+						c.fillText(alientr4hp, alienTr4.x, alienTr4.y);
+					}
+					if(alientr5hp > 0){
+						alienTr5.draw();
+						c.fillText(alientr5hp, alienTr5.x, alienTr5.y);
+					}
+
+				}
+				//Alien H
+				if(numberOfAlienH == 1){
+					if(alienH1hp > 0){
+						alienH1.draw();
+						c.fillText(alienH1hp, alienH1.x, alienH1.y);
+					}
+				}
+
+				if(numberOfAlienH == 2){
+					if(alienH1hp > 0){
+						alienH1.draw();
+						c.fillText(alienH1hp, alienH1.x, alienH1.y);
+					}
+					if(alienH2hp > 0){
+						alienH2.draw();
+						c.fillText(alienH2hp, alienH2.x, alienH2.y);
+					}
+				}
+
+				if(numberOfAlienH == 3){
+					if(alienH1hp > 0){
+						alienH1.draw();
+						c.fillText(alienH1hp, alienH1.x, alienH1.y);
+					}
+					if(alienH2hp > 0){
+						alienH2.draw();
+						c.fillText(alienH2hp, alienH2.x, alienH2.y);
+					}
+					if(alienH3hp > 0){
+						alienH3.draw();
+						c.fillText(alienH3hp, alienH3.x, alienH3.y);
+					}
+				
+				}
+				
+				//game start
+				c.font = "50px Arial";
+				c.fillStyle = "white";
+				c.fillText("Please hit space bar", 200, 275);
+				c.fillText("When you are ready to fight", 150, 325)
+			}
+
+			if(gameState == "lost"){
+				var bg = new Image();
+				bg.src = "background3.jpg";
+				c.drawImage(bg, 0, 0, 800, 600);
+
+				c.font = "50px Arial";
+				c.fillStyle = "white";
+				c.fillText("You lost!", 200, 275);
+				c.font = "30px Arial";
+				c.fillStyle = "white";
+				c.fillText("Please hit space bar to go back", 150, 325)
+			}
+
+			if(gameState == "ability"){
+                var bg = new Image();
+                bg.src = "background5.jpg";
+                c.drawImage(bg, 0, 0, 800, 600);
+
+
+                c.font = "50px Times"
+                c.fillText("In first round of the game you", 75, 100)
+				c.fillText("will have only black electric", 75, 160)
+				c.font = "35px Times"
+                c.fillText("Use button 'k' to use black electric", 125, 290)
+				c.fillText("Use button 'h' to shoot with star", 125, 330)
+                c.fillText("Use button 'b' to left bomb", 125, 370)
+				c.fillText("Use button 'a,t,o,m' to use atomic bomb", 125, 410)
+				c.fillText("Use button 's' to use shield", 125, 450)
+				c.font = "25px Times"
+                // c.fillText("Use button 'a, s, d' at same time to launch atomic bomb", 125, 410)
+            }
+
+
+			if(gameState == "stop"){
+				//BACKGROUND
+				var bg = new Image();
+				bg.src = "background5.jpg";
+				c.drawImage(bg, 0, 0, 800, 600);
+
+
+			//ALIEN
+				//alien draw
+				if(numberOfAlien == 1){
+					if(alienhp > 0){
+						alien.draw();
+					}
+				}
+				if(numberOfAlien == 2){
+					if(alienhp > 0){
+						alien.draw();
+					}
+					if(alien1hp > 0){
+						alien1.draw();
+					}
+				}
+				if(numberOfAlien == 3){
+					if(alienhp > 0){
+						alien.draw();
+					}
+					if(alien1hp > 0){
+						alien1.draw();
+					}
+					if(alien2hp > 0){
+						alien2.draw();
+					}
+				}
+				if(numberOfAlien == 4){
+					if(alienhp > 0){
+						alien.draw();
+					}
+					if(alien1hp > 0){
+						alien1.draw();
+					}
+					if(alien2hp > 0){
+						alien2.draw();
+					}
+					if(alien3hp > 0){
+						alien3.draw();
+					}
+				}
+				if(numberOfAlien == 5){
+					if(alienhp > 0){
+						alien.draw();
+					}
+					if(alien1hp > 0){
+						alien1.draw();
+					}
+					if(alien2hp > 0){
+						alien2.draw();
+					}
+					if(alien3hp > 0){
+						alien3.draw();
+					}
+					if(alien4hp > 0){
+						alien4.draw();
+					}
+				}
+
+				//alien tr draw
+				if(numberOfAlienTr == 1){
+					if(alientr1hp > 0){
+						alienTr1.draw();
+					}
+				}
+				if(numberOfAlienTr == 2){
+					if(alientr1hp > 0){
+						alienTr1.draw();
+					}
+					if(alientr2hp > 0){
+						alienTr2.draw();
+					}
+				}
+				if(numberOfAlienTr == 3){
+					if(alientr1hp > 0){
+						alienTr1.draw();
+					}
+					if(alientr2hp > 0){
+						alienTr2.draw();
+					}
+					if(alientr3hp > 0){
+						alienTr3.draw();
+					}
+				}
+				if(numberOfAlienTr == 4){
+					if(alientr1hp > 0){
+						alienTr1.draw();
+					}
+					if(alientr2hp > 0){
+						alienTr2.draw();
+					}
+					if(alientr3hp > 0){
+						alienTr3.draw();
+					}
+					if(alientr4hp > 0){
+						alienTr4.draw();
+					}
+				}
+				if(numberOfAlienTr == 5){
+					if(alientr1hp > 0){
+						alienTr1.draw();
+					}
+					if(alientr2hp > 0){
+						alienTr2.draw();
+					}
+					if(alientr3hp > 0){
+						alienTr3.draw();
+					}
+					if(alientr4hp > 0){
+						alienTr4.draw();
+					}
+					if(alientr5hp > 0){
+						alienTr5.draw();
+					}
+				}
+
+				//Alien H
+				if(numberOfAlienH == 1){
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alienH1hp > 0){
+						alienH1.draw();
+					}
+					
+				}
+
+				if(numberOfAlienH == 2){
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alienH1hp > 0){
+						alienH1.draw();
+					}
+					if(alienH2hp > 0){
+						alienH2.draw();
+					}
+				}
+
+				if(numberOfAlienH == 3){
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alienH1hp > 0){
+						alienH1.draw();
+					}
+					if(alienH2hp > 0){
+						alienH2.draw();
+					}
+					if(alienH3hp > 0){
+						alienH3.draw();
+					}
+				}
+			//SPACESHIP
+				spaceship.draw();
+			
+			//MESSAGE
+				c.font = "60px Times"
+				c.fillText("Game have been paused", 125, 250)
+				c.font = "30px Times"
+				c.fillText("Please use 'O' to unpause", 280, 290)
+
+				//hp board
+				c.font = "25px Arial";
+				c.fillStyle = "white";
+				c.fillText(hp, 730, 575);
+
+			//ability
+				if(bFirstAb == "visible"){
+					fiAb.draw()
+				}
+
+				if(bSecondAb == "visible"){
+					seAb.draw()
+				}
+
+				if(bThirdAb == "visible"){
+					thAb.draw()
+				}
+			}
+
+			if(gameState == "win"){
+				var bg = new Image();
+				bg.src = "background4.png";
+				c.drawImage(bg, 0, 0, 800, 600);
+
+				c.font = "60px Times"
+				c.fillText("You saved this planet", 125, 250)
+				c.font = "30px Times"
+				c.fillText("Please use 'enter' to go next", 280, 290)
+			}
+
+			if(gameState == "safePlanet"){
+				var bg = new Image();
+				bg.src = "background4.png";
+				c.drawImage(bg, 0, 0, 800, 600);
+
+				c.font = "30px Times"
+				c.fillText("Use space to go back", 400, 500)
+			}
+
+			if(gameState == "countDown"){
+
+				//background image
+				var bg = new Image();
+				bg.src = "background1.jpg";
+				c.drawImage(bg, 0, 0, 800, 600);
+
+
+			//ALIEN
+				//alien draw
+				if(numberOfAlien == 1){
+					if(alienhp > 0){
+						alien.draw();
+					}
+				}
+				if(numberOfAlien == 2){
+					if(alienhp > 0){
+						alien.draw();
+					}
+					if(alien1hp > 0){
+						alien1.draw();
+					}
+				}
+				if(numberOfAlien == 3){
+					if(alienhp > 0){
+						alien.draw();
+					}
+					if(alien1hp > 0){
+						alien1.draw();
+					}
+					if(alien2hp > 0){
+						alien2.draw();
+					}
+				}
+				if(numberOfAlien == 4){
+					if(alienhp > 0){
+						alien.draw();
+					}
+					if(alien1hp > 0){
+						alien1.draw();
+					}
+					if(alien2hp > 0){
+						alien2.draw();
+					}
+					if(alien3hp > 0){
+						alien3.draw();
+					}
+				}
+				if(numberOfAlien == 5){
+					if(alienhp > 0){
+						alien.draw();
+					}
+					if(alien1hp > 0){
+						alien1.draw();
+					}
+					if(alien2hp > 0){
+						alien2.draw();
+					}
+					if(alien3hp > 0){
+						alien3.draw();
+					}
+					if(alien4hp > 0){
+						alien4.draw();
+					}
+				}
+
+				//alien tr draw
+				if(numberOfAlienTr == 1){
+					if(alientr1hp > 0){
+						alienTr1.draw();
+					}
+				}
+				if(numberOfAlienTr == 2){
+					if(alientr1hp > 0){
+						alienTr1.draw();
+					}
+					if(alientr2hp > 0){
+						alienTr2.draw();
+					}
+				}
+				if(numberOfAlienTr == 3){
+					if(alientr1hp > 0){
+						alienTr1.draw();
+					}
+					if(alientr2hp > 0){
+						alienTr2.draw();
+					}
+					if(alientr3hp > 0){
+						alienTr3.draw();
+					}
+				}
+				if(numberOfAlienTr == 4){
+					if(alientr1hp > 0){
+						alienTr1.draw();
+					}
+					if(alientr2hp > 0){
+						alienTr2.draw();
+					}
+					if(alientr3hp > 0){
+						alienTr3.draw();
+					}
+					if(alientr4hp > 0){
+						alienTr4.draw();
+					}
+				}
+				if(numberOfAlienTr == 5){
+					if(alientr1hp > 0){
+						alienTr1.draw();
+					}
+					if(alientr2hp > 0){
+						alienTr2.draw();
+					}
+					if(alientr3hp > 0){
+						alienTr3.draw();
+					}
+					if(alientr4hp > 0){
+						alienTr4.draw();
+					}
+					if(alientr5hp > 0){
+						alienTr5.draw();
+					}
+				}
+
+				//Alien H
+				if(numberOfAlienH == 1){
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alienH1hp > 0){
+						alienH1.draw();
+					}
+					
+				}
+
+				if(numberOfAlienH == 2){
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alienH1hp > 0){
+						alienH1.draw();
+					}
+					if(alienH2hp > 0){
+						alienH2.draw();
+					}
+				}
+
+				if(numberOfAlienH == 3){
+					c.font = "25px Arial";
+					c.fillStyle = "white";
+
+					if(alienH1hp > 0){
+						alienH1.draw();
+					}
+					if(alienH2hp > 0){
+						alienH2.draw();
+					}
+					if(alienH3hp > 0){
+						alienH3.draw();
+					}
+				}
+			//SPACESHIP
+				spaceship.draw();
+
+				
+				c.font = "50px Arial";
+				c.fillStyle = "white";
+				c.fillText(number, 350, 275);
+			}
+
+
+
+			if(gameState == "myWord"){
+				var bg = new Image();
+				bg.src = "background5.jpg";
+				spaceship.draw();
+				c.font = "50px Arial";
+				c.fillStyle = "white";
+				c.fillText("Hend hairtaig maani mdh uu?", 100, 275);
+				c.fillText("A**n-E****e",100, 325);
+			}
+		}
+
+
+	</script>
+
+</head>
+
+
+<body onload="gameFrameworkInit()">
+	
+	<canvas id="myCanvas" width="800" height="600"></canvas>
+
+</body>
+
+
+</html>
