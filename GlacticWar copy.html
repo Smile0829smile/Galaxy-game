@@ -2557,6 +2557,18 @@
 					c.fillText("Use button 'g' to enter", 10, 550)
 				}
 			}
+			
+
+			if(gameState == "myWord"){
+				var bg = new Image();
+				bg.src = "background5.jpg";
+				spaceship.draw();
+				c.font = "50px Arial";
+				c.fillStyle = "white";
+				c.fillText("Hend hairtaig maani mdh uu?", 100, 275);
+				c.fillText("A**n-E****e",100, 325);
+			}
+			
 
 			if(gameState == "play"){
 				//background image
@@ -3679,17 +3691,6 @@
 				c.fillText(number, 350, 275);
 			}
 
-
-
-			if(gameState == "myWord"){
-				var bg = new Image();
-				bg.src = "background5.jpg";
-				spaceship.draw();
-				c.font = "50px Arial";
-				c.fillStyle = "white";
-				c.fillText("Hend hairtaig maani mdh uu?", 100, 275);
-				c.fillText("A**n-E****e",100, 325);
-			}
 		}
 
 
